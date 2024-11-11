@@ -1,3 +1,4 @@
+import ast
 from flask import Flask, request, render_template, jsonify  # Import jsonify
 import numpy as np
 import pandas as pd
@@ -63,36 +64,45 @@ def get_predicted_value(patient_symptoms):
 def index():
     return render_template("index.html")
 
-# Define a route for the home page
 @app.route('/predict', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
         symptoms = request.form.get('symptoms')
-        # mysysms = request.form.get('mysysms')
-        # print(mysysms)
+        # data = request.get_json()
+        # symptoms = data.get('symptoms')
         print(symptoms)
-        if symptoms =="Symptoms":
-            message = "Please either write symptoms or you have written misspelled symptoms"
+        
+        if symptoms.lower() == "symptoms":
+            message = "Please either write symptoms or you have written misspelled symptoms."
             return render_template('index.html', message=message)
-        else:
+        
+        # Split the user's input into a list of symptoms
+        user_symptoms = [s.strip() for s in symptoms.split(',')]
+        user_symptoms = [symptom for symptom in user_symptoms if symptom in symptoms_dict]
+        
+        if not user_symptoms:
+            message = "Invalid symptoms entered. Please try again."
+            return render_template('index.html', message=message)
+        
+        # Prediction and data retrieval
+        predicted_disease = get_predicted_value(user_symptoms)
+        dis_des, precautions, medications, rec_diet, workout = helper(predicted_disease)
+        mdc = ast.literal_eval(medications[0])
+        wok = ast.literal_eval(rec_diet[0])
+        print(rec_diet)
 
-            # Split the user's input into a list of symptoms (assuming they are comma-separated)
-            user_symptoms = [s.strip() for s in symptoms.split(',')]
-            # Remove any extra characters, if any
-            user_symptoms = [symptom.strip("[]' ") for symptom in user_symptoms]
-            predicted_disease = get_predicted_value(user_symptoms)
-            dis_des, precautions, medications, rec_diet, workout = helper(predicted_disease)
-
-            my_precautions = []
-            for i in precautions[0]:
-                my_precautions.append(i)
-
-            return render_template('index.html', predicted_disease=predicted_disease, dis_des=dis_des,
-                                   my_precautions=my_precautions, medications=medications, my_diet=rec_diet,
-                                   workout=workout)
-
+        # Redirect to disease.html with the prediction details
+        return render_template(
+            'disease.html',
+            predicted_disease=predicted_disease,
+            dis_des=dis_des,
+            my_precautions=precautions[0],
+            medications=mdc,
+            my_diet=wok,
+            workout=workout
+        )
+    
     return render_template('index.html')
-
 
 
 # about view funtion and path

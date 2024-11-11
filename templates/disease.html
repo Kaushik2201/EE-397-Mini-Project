@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+    <link rel="icon" type="image/png" href="static/favicon.png">
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Background Image */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url('https://assets.justinmind.com/wp-content/uploads/2020/02/website-background-design-guide-768x492.png'); /* Replace with your preferred image URL */
+            background-size: cover;
+            background-position: center;
+            color: #ffffff;
+        }
+        
+        header {
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+        
+        header h1 {
+            font-size: 2.8rem;
+            margin: 0;
+            text-transform: capitalize;
+            color: white;
+        }
+        
+        .container {
+            margin-top: 30px;
+            padding: 0 15px;
+        }
+        
+        .result-header {
+            background-color: rgba(34, 63, 131, 0.8); /* Dark background with opacity */
+            color: rgb(0, 0, 0);
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .result-header h1 {
+            font-size: 2.2rem;
+            text-align: center;
+        }
+        
+        h3 {
+            color: #000000;
+            font-size: 1.8rem;
+            margin-top: 30px;
+            text-transform: uppercase;
+        }
+        
+        p, ul {
+            font-size: 1.2rem;
+            margin: 15px 0;
+            line-height: 1.8;
+        }
+        
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        li {
+            background-color: rgba(0, 0, 0, 0.8);
+            margin: 8px 0;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        li:hover {
+            background-color: #00b3ff;
+            transform: scale(1.03);
+        }
+        
+        .btn-custom {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 15px 30px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, transform 0.2s ease;
+        }
+        
+        .btn-custom:hover {
+            background-color: #45a049;
+            transform: translateY(-3px);
+        }
+        
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: none;
+            background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent background for the card */
+        }
+        
+        .card-body {
+            padding: 25px;
+        }
+        
+        .list-group-item {
+            background-color: #f9f9f9;
+            border: none;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            padding: 12px 20px;
+            transition: transform 0.2s, background-color 0.3s ease;
+        }
+        
+        .list-group-item:hover {
+            background-color: #00b3ff;
+            transform: scale(1.02);
+            cursor: pointer;
+        }
+        
+        .card-body h3 {
+            color: #000000;
+            font-size: 1.6rem;
+            text-transform: uppercase;
+        }
+        
+        .card-body p {
+            font-size: 1.2rem;
+            color: #000000;
+        }
+
+        /* To make sure text is readable against the background */
+        .card-body, .result-header {
+            background-color: rgba(255, 255, 255, 0.9); /* Light transparent background */
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        /* A slight dark overlay over the page for better readability */
+        .container {
+            background: rgba(209, 164, 164, 0.8); /* Background of the container */
+            border-radius: 10px;
+            padding: 40px 20px;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Prediction Result</h1>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <div class="result-header">
+                <h1>Type of Disease - {{ predicted_disease }}</h1>
+            </div>
+
+            <div class="card-body">
+                <h3>Description</h3>
+                <li class="list-group-item">{{ dis_des }}</li>
+
+                <h3>Precautions</h3>
+                    <ul class="list-group">
+                        {% for precaution in my_precautions %}
+                            <li class="list-group-item">{{ loop.index }}. {{ precaution|capitalize }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+
+                <h3>Medications</h3>
+                <ul class="list-group">
+                    {% for medication in medications %}
+                        <li class="list-group-item">{{ loop.index }}. {{ medication }}</li>
+                    {% endfor %}
+                </ul>
+
+                <h3>Diet Recommendations</h3>
+                <ul class="list-group">
+                    {% for diet in my_diet %}
+                        <li class="list-group-item">{{ loop.index }}. {{ diet }}</li>
+                    {% endfor %}
+                </ul>
+
+                <h3>Workout Suggestions</h3>
+                <ul class="list-group">
+                    {% for workout_item in workout %}
+                        <li class="list-group-item">{{ loop.index }}. {{ workout_item }}</li>
+                    {% endfor %}
+                </ul>
+
+                <a href="/" class="btn btn-custom">Go Back</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
